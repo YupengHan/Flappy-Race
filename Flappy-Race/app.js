@@ -1,24 +1,37 @@
-const http = require('http'); 
-const fs =require('fs')
+'use strict';
 
-const hostname = '127.0.0.1';
-const port = 3000;
+let http = require('http');
+let express = require('express');
+let socketio = require('socket.io');
 
-fs.readFile('flappy.html', (err, html) =>{
-	if(err){
-		throw err;
-	}
+let app = express();
+let server = http.createServer(app);
+let io = socketio(server);
 
-	const server = http.createServer((req, res) =>{
-		res.statusCode=200;
-		res.setHeader('Content-type', 'text/html');
-		res.write(html);
-		res.end();
-	})
+var matching = false;
 
-	server.listen(port, hostname, () =>{
-		console.log('Server started on port '+ port);
-	})
+var roomNo = 2;
+
+io.on('connection', onConnection);
+
+app.use(express.static(__dirname + '/'));
+server.listen(8080, () => console.log(__dirname));
 
 
-})
+function onConnection(sock) {
+    sock.on('match', function () {
+        if (!matching) {
+            sock.join(roomNo);
+            matching = true;
+        } else {
+            sock.join(roomNo);
+            io.in(roomNo).emit('matchStart');
+            ++roomNo;
+            matching = false;
+        }
+    });
+    sock.on('pos', function (x, y) {
+        console.log(Object.keys(sock.rooms)[0]);
+        sock.to(Object.keys(sock.rooms)[0]).emit('pos', x, y);
+    });
+}
