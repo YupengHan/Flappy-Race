@@ -6,8 +6,10 @@ var myScore;
 var projectiles = [];
 
 function startGame() {
-    myGamePiece = new component(10, 10, "blue", 10, 120);
-    otherGamePiece = new component(10, 10, "red", 100, 120);
+//    myGamePiece = new component(10, 10, "blue", 10, 120);
+//    otherGamePiece = new component(10, 10, "red", 100, 120);
+    myGamePiece = new component(20, 20, "roll.png", 10, 120, "image");
+    otherGamePiece = new component(20, 20, "flushed.png", 10, 120, "image");
     myGamePiece.gravity = 0.05;
     otherGamePiece.gravity = 0.05;
     myScore = new component("30px", "Consolas", "black", 280, 40, "text");
@@ -31,6 +33,10 @@ var myGameArea = {
 
 function component(width, height, color, x, y, type) {
     this.type = type;
+    if (type == "image") {
+        this.image = new Image();
+        this.image.src = color;
+    }
     this.score = 0;
     this.width = width;
     this.height = height;
@@ -42,7 +48,14 @@ function component(width, height, color, x, y, type) {
     this.gravitySpeed = 0;
     this.update = function () {
         ctx = myGameArea.context;
-        if (this.type == "text") {
+        if (this.type == "image") {
+            ctx.drawImage(this.image,
+                this.x,
+                this.y,
+                this.width,
+                this.height);
+        }
+        else if (this.type == "text") {
             ctx.font = this.width + " " + this.height;
             ctx.fillStyle = color;
             ctx.fillText(this.text, this.x, this.y);
@@ -52,6 +65,7 @@ function component(width, height, color, x, y, type) {
         }
     }
     this.updatePos = function () {
+        //myGamePiece.image.src = "fine.png"
         this.gravitySpeed += this.gravity;
         this.x += this.speedX;
         this.y += this.speedY + this.gravitySpeed;
@@ -103,12 +117,14 @@ function component(width, height, color, x, y, type) {
         return crash;
     }
     this.move = function (accelrateX, accelrateY) {
+        myGamePiece.image.src = "fine.png";
         this.speedX += accelrateX;
         if (this.gravitySpeed > -1) {
             this.gravitySpeed += accelrateY;
         }
     }
     this.attack1 = function () {
+        myGamePiece.image.src = "roll.png";
         var direction = myGamePiece.x - otherGamePiece.x;
         if (direction < 0) {
             direction = 1;
