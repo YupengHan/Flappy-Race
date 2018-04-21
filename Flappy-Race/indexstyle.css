@@ -1,0 +1,26 @@
+
+canvas {
+	position: relative;
+    border:1px solid #d3d3d3;
+    background-color: #f1f1f1;
+    display: inline-block;
+}
+
+#layer {
+	height: auto;
+	width: 760px;
+	height: 600px;
+}
+
+#left {
+	float: left;
+	height: auto;
+	width: 200px;
+	height: 600px;
+}
+
+#right {
+	float: right;
+	height: 600px;
+	width: 460px;
+}

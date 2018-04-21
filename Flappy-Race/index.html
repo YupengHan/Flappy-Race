@@ -1,22 +1,27 @@
 <!DOCTYPE html>
 <html>
+<title>
+	Flappy Race
+</title>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<style>
-canvas {
-    border:1px solid #d3d3d3;
-    background-color: #f1f1f1;
-}
-</style>
+<link rel="stylesheet" type="text/css" href="indexstyle.css">
 </head>
 <body>
-<a href="login.html">login</a>
-<a href="signup.html">signup</a>
-<br>
-<button id="match">MATCH</button>
-<p id="demo"></p>
-<p>How long can you stay alive?</p>
-<script src="/socket.io/socket.io.js"></script>
-<script src="client.js"></script>
+	<div id="layer">
+		<div id="left">
+			<a href="login.html">login</a>
+			<br>
+			<a href="signup.html">signup</a>
+		</div>
+		<div id="right">
+			<br>
+			<button id="match">MATCH</button>
+			<p id="demo"></p>
+			<p>How long can you stay alive?</p>
+			<script src="/socket.io/socket.io.js"></script>
+			<script src="client.js"></script>
+		</div>
+	</div>
 </body>
 </html>
