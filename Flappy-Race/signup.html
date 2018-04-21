@@ -3,34 +3,41 @@
     <head>
         <meta charset="UTF-8">
         <title>Sign Up</title>
-        <link rel="stylesheet" type="text/css" href="style.css">>
-        <script type="text/javascript" src="LoginCheck.js"></script>
+        <link rel="stylesheet" type="text/css" href="style.css">
     </head>
 
     <body>
-        
         <h1>Sign up</h1>
         <center>
-        	<form action="/signup" method="get">
         		<div class="form-control">
         			<label>Username</label>
-        			<input type="text" class="form-control" name="username">
+        			<input type="text" id="username">
         		</div>
         		<div class="form-control">
         			<label>Password</label>
-        			<input type="password" class="form-control" name="password">
+        			<input type="password" id="password">
         		</div>
                 <div class="form-control">
                     <label>Re Enter</label>
-                    <input type="password" name="form-control" name="Re-typed_password">
+                    <input type="password" id="Re-typed_password">
                 </div>
-
-        		<button type="submit" class="btn btn-warning brn-log">Create</button>
-
+        		<button type="submit" class="btn btn-warning brn-log" onclick="connection()">Create</button>
+                <p id="demo"></p>
+                <script src="/socket.io/socket.io.js"></script>
+                <script>
+                function connection() {
+                    var sock = io();
+                    var username = document.getElementById("username").value;
+                    var password = document.getElementById("password").value;
+                    var repw = document.getElementById("Re-typed_password").value;
+                    sock.emit('getuser', username, password, repw);
+                    sock.on('response', (res) => {
+                        document.getElementById("demo").innerHTML = res;
+                    });
+                }
+                </script>
         		<p>Already have an accout? <a href="./login.html">login</a></p>
                 <p>Back to homepage <a href="./index.html">homepage</a></p>
-        	</form>
         </center>
     </body>
-    
 </html>

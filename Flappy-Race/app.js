@@ -44,4 +44,10 @@ function onConnection(sock) {
         //console.log(Object.keys(sock.rooms)[0]);
         sock.to(Object.keys(sock.rooms)[0]).emit('end');
     });
+    sock.on('getuser', function(un, pw, repw) {
+        console.log("Success!");
+        sock.emit('response', un+" "+pw+" "+repw);
+    //    sock.emit('response', 'OK!');
+    });
+
 }
