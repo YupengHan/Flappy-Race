@@ -49,5 +49,9 @@ function onConnection(sock) {
         sock.emit('response', un+" "+pw+" "+repw);
     //    sock.emit('response', 'OK!');
     });
+    sock.on('receiveuser', function(un, pw) {
+        console.log("Success!");
+        sock.emit('resp', un+" "+pw);
+    });
 
 }
