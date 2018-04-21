@@ -24,6 +24,7 @@ var myGameArea = {
         this.context = this.canvas.getContext("2d");
         document.body.insertBefore(this.canvas, document.body.childNodes[0]);
         this.frameNo = 0;
+        clearInterval(this.interval);
         this.interval = setInterval(updateGameArea, 60);
     },
     clear: function () {
@@ -171,10 +172,16 @@ function checkCrash() {
         if (myGamePiece.crashWith(projectiles[i])) {
             clearInterval(myGameArea.interval);
             document.getElementById("demo").innerHTML = "You lose";
+            projectiles = [];
+            document.getElementById('match').style.display = 'block';
+            break;
         }
         if (otherGamePiece.crashWith(projectiles[i])) {
             clearInterval(myGameArea.interval);
             document.getElementById("demo").innerHTML = "You win";
+            projectiles = [];
+            document.getElementById('match').style.display = 'block';
+            break;
         }
     }
 }
@@ -220,6 +227,7 @@ function test() {
 }
 
 document.getElementById('match').addEventListener('click', function () {
+    document.getElementById('match').style.display = 'none';
     sock.emit('match');
     sock.on('matchStart', function () {
         startGame();
