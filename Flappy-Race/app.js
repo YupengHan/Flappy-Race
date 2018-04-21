@@ -21,10 +21,12 @@ server.listen(8080, () => console.log(__dirname));
 function onConnection(sock) {
     sock.on('match', function () {
         if (!matching) {
+            sock.leave(Object.keys(sock.rooms)[0]);
             sock.join(roomNo);
             matching = true;
         } else {
             sock.join(roomNo);
+            sock.leave(Object.keys(sock.rooms)[0]);
             io.in(roomNo).emit('matchStart');
             ++roomNo;
             matching = false;
