@@ -231,7 +231,7 @@ document.getElementById('Login').addEventListener('click', function () {
     
     var usernameInput = document.getElementById("username").value;
     var passwordInput = document.getElementById("password").value;
-    userAndpass = usernameInput + ':' + passwordInput;
+    userAndpass = usernameInput + '/' + passwordInput;
     sock.emit('login', userAndpass);
     sock.on('login', function (name, scoreReceived) {
         if (name == 'guest') {
