@@ -12,6 +12,9 @@ var matching = false;
 
 var roomNo = 2;
 
+var users = new Map();
+users.set("sam:123", 0);
+
 io.on('connection', onConnection);
 
 app.use(express.static(__dirname + '/'));
@@ -40,18 +43,18 @@ function onConnection(sock) {
         console.log(x+'and'+y+'and'+direction);
         io.in(Object.keys(sock.rooms)[0]).emit('firec', x, y, direction);
     });
-    sock.on('end', function () {
-        //console.log(Object.keys(sock.rooms)[0]);
-        sock.to(Object.keys(sock.rooms)[0]).emit('end');
+    sock.on('login', function (nameAndPass) {
+        console.log(nameAndPass);
+        if(users.has(nameAndPass)){
+            sock.emit('login', nameAndPass, users.get(nameAndPass));
+        } else {
+            sock.emit('login', 'guest');
+        }
     });
-    sock.on('getuser', function(un, pw, repw) {
-        console.log("Success!");
-        sock.emit('response', un+" "+pw+" "+repw);
-    //    sock.emit('response', 'OK!');
+    sock.on('score', function (nameAndPass, score) {
+        console.log(nameAndPass + score);
+        if(users.has(nameAndPass)){
+            users.set(nameAndPass, score);
+        }
     });
-    sock.on('receiveuser', function(un, pw) {
-        console.log("Success!");
-        sock.emit('resp', un+" "+pw);
-    });
-
 }

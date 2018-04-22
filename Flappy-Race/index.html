@@ -1,27 +1,35 @@
 <!DOCTYPE html>
 <html>
-<title>
-	Flappy Race
-</title>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<link rel="stylesheet" type="text/css" href="indexstyle.css">
+<style>
+h1 {background-color: powderblue;}
+h1   {color: blue;}
+p    {color: red;}
+</style>
 </head>
 <body>
-	<div id="layer">
-		<div id="left">
-			<a href="login.html">login</a>
-			<br>
-			<a href="signup.html">signup</a>
-		</div>
-		<div id="right">
-			<br>
-			<button id="match">MATCH</button>
-			<p id="demo"></p>
-			<p>How long can you stay alive?</p>
-			<script src="/socket.io/socket.io.js"></script>
-			<script src="client.js"></script>
-		</div>
-	</div>
+<h1>This is a Heading</h1>
+<center>
+    		<div class="form-control">
+    		    <label>Username</label>
+    			<input type="text" id="username" value="asd">
+            </div>
+            <div class="form-control">
+    			<label>Password:</label>
+    			<input type="password" id="password" value="asd">
+            </div>
+            <div class="form-control">
+    		    <button id="Login">Login</button>  <a href="signup.html">signup</a>
+            </div>
+</center>
+<br>
+<button id="match">MATCH</button>
+<button id="L">Login2</button>
+<p id="demo"></p>
+<p id="scoreboard"></p>
+<p>How long can you stay alive?</p>
+<script src="/socket.io/socket.io.js"></script>
+<script src="client.js"></script>
 </body>
 </html>

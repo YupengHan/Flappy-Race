@@ -1,18 +1,17 @@
 var sock = io();
 var myGamePiece;
 var otherGamePiece;
-var myObstacles = [];
-var myScore;
 var projectiles = [];
+var user;
+var userAndpass;
+var score = 0;
 
 function startGame() {
-//    myGamePiece = new component(10, 10, "blue", 10, 120);
-//    otherGamePiece = new component(10, 10, "red", 100, 120);
+    updateScore();
     myGamePiece = new component(20, 20, "roll.png", 10, 120, "image");
     otherGamePiece = new component(20, 20, "flushed.png", 10, 120, "image");
     myGamePiece.gravity = 0.05;
     otherGamePiece.gravity = 0.05;
-    myScore = new component("30px", "Consolas", "black", 280, 40, "text");
     myGameArea.start();
 }
 
@@ -38,7 +37,6 @@ function component(width, height, color, x, y, type) {
         this.image = new Image();
         this.image.src = color;
     }
-    this.score = 0;
     this.width = width;
     this.height = height;
     this.speedX = 0;
@@ -55,11 +53,6 @@ function component(width, height, color, x, y, type) {
                 this.y,
                 this.width,
                 this.height);
-        }
-        else if (this.type == "text") {
-            ctx.font = this.width + " " + this.height;
-            ctx.fillStyle = color;
-            ctx.fillText(this.text, this.x, this.y);
         } else {
             ctx.fillStyle = color;
             ctx.fillRect(this.x, this.y, this.width, this.height);
@@ -148,8 +141,7 @@ function updateGameArea() {
     if (everyinterval(50)) {
         myGamePiece.attack1();
     }
-    myScore.text = "SCORE: " + myGameArea.frameNo;
-    myScore.update();
+
     myGamePiece.updatePos();
     myGamePiece.update();
     myGamePiece.posEmit();
@@ -174,6 +166,7 @@ function checkCrash() {
             document.getElementById("demo").innerHTML = "You lose";
             projectiles = [];
             document.getElementById('match').style.display = 'block';
+            emitScore(-1);
             break;
         }
         if (otherGamePiece.crashWith(projectiles[i])) {
@@ -181,16 +174,10 @@ function checkCrash() {
             document.getElementById("demo").innerHTML = "You win";
             projectiles = [];
             document.getElementById('match').style.display = 'block';
+            emitScore(1);
             break;
         }
     }
-}
-
-function endGame() {
-    sock.on('end', (x, y, direction) => {
-        document.getElementById("demo").innerHTML = "You win";
-        clearInterval(myGameArea.interval);
-    });
 }
 
 function everyinterval(n) {
@@ -198,8 +185,14 @@ function everyinterval(n) {
     return false;
 }
 
-function accelerate(n) {
-    myGamePiece.speedX += n;
+function emitScore(scoreChange) {
+    score += scoreChange;
+    sock.emit('score', userAndpass, score);
+    updateScore();
+}
+
+function updateScore(){
+    document.getElementById("scoreboard").innerHTML = "Score: " + score;
 }
 
 document.addEventListener('keypress', (event) => {
@@ -233,5 +226,25 @@ document.getElementById('match').addEventListener('click', function () {
         startGame();
     });
 });
-//otherGamePiece.posRecive();
-//fireRecive();
+
+document.getElementById('Login').addEventListener('click', function () {
+    
+    var usernameInput = document.getElementById("username").value;
+    var passwordInput = document.getElementById("password").value;
+    userAndpass = usernameInput + ':' + passwordInput;
+    sock.emit('login', userAndpass);
+    sock.on('login', function (name, scoreReceived) {
+        if (name == 'guest') {
+            document.getElementById("demo").innerHTML = "login failed" + usernameInput;
+        } else {
+            user = usernameInput;
+            score = scoreReceived;
+            document.getElementById("demo").innerHTML = "You are login as " + usernameInput + 'score: ' + score;
+        }
+    });
+});
+
+document.getElementById('L').addEventListener('click', function () {
+    test();
+});
+
