@@ -8,7 +8,7 @@ document.getElementById('signUp').addEventListener('click', function () {
         document.getElementById("demo").innerHTML = "Passwords doesn't match";
         return;
     }
-    userAndpass = usernameInput + ':' + passwordInput;
+    userAndpass = usernameInput + '/' + passwordInput;
     sock.emit('signUp', userAndpass);
     sock.on('signUp', function (x) {
         if(x == 'success'){
