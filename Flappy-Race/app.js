@@ -125,10 +125,8 @@ function onConnection(sock) {
         	// wincount=0;
             sock.emit('login', nameAndPass, wincount);
         } else {
-            console.log('Guseting');
-            alert("Login Failed! \nYou are playing as a guest.");
+            console.log('Guseting')
             sock.emit('login', 'guest');
-//            alert("Login Failed");
         }
     });
     sock.on('score', function (nameAndPass, score) {
