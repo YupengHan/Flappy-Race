@@ -1,5 +1,19 @@
 'use strict';
 
+// -----------------------------------------------------------------------------------------
+var mysql = require('mysql');
+
+var con = mysql.createConnection({
+        host: "localhost",
+        user: "root",
+        password: "Lab6",
+        database: "hafdb"
+        // port: 8080
+});
+
+
+// -----------------------------------------------------------------------------------------
+
 let http = require('http');
 let express = require('express');
 let socketio = require('socket.io');
@@ -45,7 +59,19 @@ function onConnection(sock) {
     });
     sock.on('login', function (nameAndPass) {
         console.log(nameAndPass);
-        if(users.has(nameAndPass)){
+        var midexist;
+        con.connect(function(err) {
+        	if (err) throw err;
+        	console.log("Connected!");
+        	var sql = "SELECT EXISTS(SELECT 1 FROM customer WHERE name='a');";
+        	con.query(sql, function (err, result) {
+        		if (err) throw err;
+        		console.log("1 record inserted");
+        		midexist=true;
+        	});
+        });
+
+        if(midexist){
             sock.emit('login', nameAndPass, users.get(nameAndPass));
         } else {
             sock.emit('login', 'guest');
