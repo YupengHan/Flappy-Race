@@ -3,41 +3,32 @@
     <head>
         <meta charset="UTF-8">
         <title>Sign Up</title>
-        <link rel="stylesheet" type="text/css" href="style.css">
+        <link rel="stylesheet" type="text/css" href="style.css">>
     </head>
 
     <body>
+        
         <h1>Sign up</h1>
         <center>
-        		<div class="form-control">
-        			<label>Username</label>
-        			<input type="text" id="username">
-        		</div>
-        		<div class="form-control">
-        			<label>Password</label>
-        			<input type="password" id="password">
-        		</div>
-                <div class="form-control">
-                    <label>Re Enter</label>
-                    <input type="password" id="Re-typed_password">
-                </div>
-        		<button type="submit" class="btn btn-warning brn-log" onclick="connection()">Create</button>
-                <p id="demo"></p>
-                <script src="/socket.io/socket.io.js"></script>
-                <script>
-                function connection() {
-                    var sock = io();
-                    var username = document.getElementById("username").value;
-                    var password = document.getElementById("password").value;
-                    var repw = document.getElementById("Re-typed_password").value;
-                    sock.emit('getuser', username, password, repw);
-                    sock.on('response', (res) => {
-                        document.getElementById("demo").innerHTML = res;
-                    });
-                }
-                </script>
-        		<p>Already have an accout? <a href="./login.html">login</a></p>
-                <p>Back to homepage <a href="./index.html">homepage</a></p>
+
+        	<div class="form-control">
+        		<label>Username</label>
+        		<input type="text" id="username">
+        	</div>
+        	<div class="form-control">
+        		<label>Password</label>
+        		<input type="password" id="password">
+        	</div>
+            <div class="form-control">
+                <label>Re Enter</label>
+                <input type="password" id="reEnterPassword">
+            </div>
+        	<button id="signUp">sign up</button> 
+            <p>Back to homepage <a href="index.html">homepage</a></p>
+            <p id="demo"></p>
         </center>
+        <script src="/socket.io/socket.io.js"></script>
+        <script src="signUp.js"></script>
     </body>
+    
 </html>
