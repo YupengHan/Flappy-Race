@@ -1,35 +1,87 @@
 <!DOCTYPE html>
 <html>
+<title>Flappy Race</title>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <style>
 h1 {background-color: powderblue;}
-h1   {color: blue;}
+h1   {color: white;}
 p    {color: red;}
+</style>
+<style type="text/css">
+body {
+	margin: 0px;
+	padding:0
+}
+#div1 {
+	display: none;
+	position: fixed;
+	z-index: 9;
+	height: 100%;
+	width: 100%;
+	background: #000000;
+	opacity: 0.3;
+}
+#div2 {
+	display: none;
+	position: absolute;
+	height: 100%;
+	width: 100%;
+	padding-top: 10%;
+	z-index: 10;
+	left: 0px;
+	top: 0px;
+}
+#game {
+	margin-left: 20px;
+	margin-right: 20px;
+}
 </style>
 </head>
 <body>
-<h1>This is a Heading</h1>
-<center>
-    		<div class="form-control">
-    		    <label>Username</label>
-    			<input type="text" id="username" value="asd">
-            </div>
-            <div class="form-control">
-    			<label>Password:</label>
-    			<input type="password" id="password" value="asd">
-            </div>
-            <div class="form-control">
-    		    <button id="Login">Login</button>  <a href="signup.html">signup</a>
-            </div>
-</center>
+<script>
+	function open_window() {
+		document.getElementById('div1').style.display='block';
+		document.getElementById('div2').style.display='block';
+	}
+	function close_window() {
+		document.getElementById('div1').style.display='none';
+		document.getElementById('div2').style.display='none';
+	}
+</script>
+	<div id="div1"></div>
+	<h1>This is a Heading</h1>
+	<center>
+	<div id="div2">
+		<table width="30%" border="0" cellpadding="3" cellspacing="1" style="background: #b0e0e6; position:static;filter:progid:DXImageTransform.Microsoft.DropShadow(color=#b0e0e6,offX=4,offY=4,positives=true)" align="center">
+		<tr id="m_tr">
+		<td><font color="#FFFFFF">login</font></td>
+		<td align="right">
+			<input type="button" name="X" onclick="close_window()">
+		</td>	
+		</tr>
+		<tr>
+			<td colspan="2" width="100%" bgcolor="#FFFFFF" height="150">
+				Username<br><input type="text" id="username"><br>
+				Password<br><input type="password" id="password"><br>
+			<button id="Login">Login</button> 
+			<button id="Cancel" onclick="close_window()">Cancel</button>
+		</tr>
+		</table>
+	</div>
+	</center>
+	<div>
+		<button id="Login_Window" onclick="open_window()">Login</button>
+	</div>
+	<div id="game">
+		<button id="match">MATCH</button>
+			<p id="demo"></p>
+			<p id="scoreboard"></p>
+			<p>How long can you stay alive?</p>
+			<script src="/socket.io/socket.io.js"></script>
+			<script src="client.js"></script>
+	</div>
 <br>
-<button id="match">MATCH</button>
-<button id="L">Login2</button>
-<p id="demo"></p>
-<p id="scoreboard"></p>
-<p>How long can you stay alive?</p>
-<script src="/socket.io/socket.io.js"></script>
-<script src="client.js"></script>
+
 </body>
 </html>
