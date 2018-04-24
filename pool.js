@@ -5,11 +5,11 @@ var pool;
 exports.init = function(){
 	pool = mysql.createPool({
 		connectionLimit :10,
-		host     : 'mydbinstance.cdugxppvx9ky.us-east-2.rds.amazonaws.com',
-		user     : 'han434',
+		host     : 'localhost',
+		user     : 'root',
 		password : '12345678',
 		database : 'hafdb',
-		port     : 3306
+		port     : 3306 //3000, 本地的时候可能是8080
 
 	});
 }
