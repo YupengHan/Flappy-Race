@@ -3,42 +3,9 @@
 <title>Flappy Race</title>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<style>
-h1 {background-color: powderblue;}
-h1   {color: white;}
-p    {color: red;}
-</style>
-<style type="text/css">
-body {
-	margin: 0px;
-	padding:0
-}
-#div1 {
-	display: none;
-	position: fixed;
-	z-index: 9;
-	height: 100%;
-	width: 100%;
-	background: #000000;
-	opacity: 0.3;
-}
-#div2 {
-	display: none;
-	position: absolute;
-	height: 100%;
-	width: 100%;
-	padding-top: 10%;
-	z-index: 10;
-	left: 0px;
-	top: 0px;
-}
-#game {
-	margin-left: 20px;
-	margin-right: 20px;
-}
-</style>
 </head>
-<body>
+<body style="background-color: #999999;">
+	<link rel="stylesheet" type="text/css" href="indexstyle.css">
 <script>
 	function open_window() {
 		document.getElementById('div1').style.display='block';
@@ -48,10 +15,25 @@ body {
 		document.getElementById('div1').style.display='none';
 		document.getElementById('div2').style.display='none';
 	}
+	function visit() {
+		window.location='./signup.html';
+	}
 </script>
 	<div id="div1"></div>
-	<h1>This is a Heading</h1>
-	<center>
+		<input type="checkbox" id="sidemenu">
+		<aside>
+			<h2>Menu</h2>
+			<div class="btn-group">
+				<button onclick="open_window()">Login</button>
+				<button onclick="visit()">signup</button>
+			</div>
+		</aside>
+		<div id="wrap">
+			<label id="sideMenuControl" for="sidemenu">M</label>
+		</div>
+	<h1 style="font-size: 4em;">
+		Flappy Game
+	</h1>
 	<div id="div2">
 		<table width="30%" border="0" cellpadding="3" cellspacing="1" style="background: #b0e0e6; position:static;filter:progid:DXImageTransform.Microsoft.DropShadow(color=#b0e0e6,offX=4,offY=4,positives=true)" align="center">
 		<tr id="m_tr">
@@ -69,21 +51,40 @@ body {
 		</tr>
 		</table>
 	</div>
-	</center>
-	<div>
-		<button id="Login_Window" onclick="open_window()">Login</button>
-	</div>
-	<p>Would like an account? <a href="./signup.html">signup</a></p>
-	<div id="game">
 
-		<button id="match">MATCH</button>
-			<p id="demo"></p>
-			<p id="scoreboard"></p>
-			<p>How long can you stay alive?</p>
-			<script src="/socket.io/socket.io.js"></script>
-			<script src="client.js"></script>
+	<div>
+		<p>
+			<style type="text/css">
+				button {
+					background-color: powderblue;
+				
+					color: white;
+					padding: 10px 24px;
+					cursor: pointer;
+					float: left;
+				}
+			</style>
+			<button id="match">MATCH</button>
+		</p>
 	</div>
-<br>
+	<br>
+	<p>
+		<style type="text/css">
+			p {
+				font-family: courier;
+				font-size: 1.5em;
+
+			}
+		</style>
+		How long can you stay alive?
+	</p>
+	<div id="game">
+		<p id="demo"></p>
+		<p id="scoreboard"></p>
+		
+		<script src="/socket.io/socket.io.js"></script>
+		<script src="client.js"></script>
+	</div>
 
 </body>
 </html>

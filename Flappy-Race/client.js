@@ -8,10 +8,10 @@ var score = 0;
 
 function startGame() {
     updateScore();
-    myGamePiece = new component(20, 20, "roll.png", 10, 120, "image");
-    otherGamePiece = new component(20, 20, "flushed.png", 10, 120, "image");
-    myGamePiece.gravity = 0.05;
-    otherGamePiece.gravity = 0.05;
+    myGamePiece = new component(80, 80, "./assets/img/my/shime1.png", 10, 120, "image");
+    otherGamePiece = new component(80, 80, "./assets/img/other/shime1.png", 10, 120, "image");
+    myGamePiece.gravity = 0.5; // change gravity
+    otherGamePiece.gravity = 0.5;
     myGameArea.start();
 }
 
@@ -21,7 +21,7 @@ var myGameArea = {
         this.canvas.width = 640;
         this.canvas.height = 270;
         this.context = this.canvas.getContext("2d");
-        document.body.insertBefore(this.canvas, document.body.childNodes[0]);
+        document.body.insertBefore(this.canvas, document.getElementById("game"));
         this.frameNo = 0;
         clearInterval(this.interval);
         this.interval = setInterval(updateGameArea, 60);
@@ -111,14 +111,32 @@ function component(width, height, color, x, y, type) {
         return crash;
     }
     this.move = function (accelrateX, accelrateY) {
-        myGamePiece.image.src = "fine.png";
+        if (accelrateX == 0 && accelrateY < 0) {
+            // move upward
+            myGamePiece.image.src = "./assets/img/my/shime4.png";
+        }
+        else if (accelrateX == 0 && accelrateY > 0) {
+            // move downward
+            myGamePiece.image.src = "./assets/img/my/shime4.png";
+        }
+        else if (accelrateX < 0 && accelrateY == 0) {
+            // move to left
+            myGamePiece.image.src = "./assets/img/my/shime10.png";
+        }
+        else if (accelrateX > 0 && accelrateY == 0) {
+            // move to right
+            myGamePiece.image.src = "./assets/img/my/shime9.png";
+        }
+        else {
+            myGamePiece.image.src = "./assets/img/my/shime1.png"
+        }
         this.speedX += accelrateX;
         if (this.gravitySpeed > -1) {
             this.gravitySpeed += accelrateY;
         }
     }
     this.attack1 = function () {
-        myGamePiece.image.src = "roll.png";
+        myGamePiece.image.src = "./assets/img/my/shime1.png";
         var direction = myGamePiece.x - otherGamePiece.x;
         if (direction < 0) {
             direction = 1;
@@ -199,16 +217,16 @@ document.addEventListener('keypress', (event) => {
     const keyName = event.key;
     if (keyName == 'd') {
         //alert('keypress event\n\n' + 'key: ' + keyName);
-        myGamePiece.move(0.1, 0);
+        myGamePiece.move(0.5, 0);
     }
     if (keyName == 's') {
-        myGamePiece.move(0, 0.1);
+        myGamePiece.move(0, 0.5);
     }
     if (keyName == 'w') {
-        myGamePiece.move(0, -1);
+        myGamePiece.move(0, -2);
     }
     if (keyName == 'a') {
-        myGamePiece.move(-0.1, 0);
+        myGamePiece.move(-0.5, 0);
     }
     if (keyName == 'j') {
         myGamePiece.attack1();
@@ -233,13 +251,19 @@ document.getElementById('Login').addEventListener('click', function () {
     var passwordInput = document.getElementById("password").value;
     userAndpass = usernameInput + '/' + passwordInput;
     sock.emit('login', userAndpass);
+ //   alert("login problem");
+ //   close_window();
     sock.on('login', function (name, scoreReceived) {
         if (name == 'guest') {
-            document.getElementById("demo").innerHTML = "login failed" + usernameInput;
+//            document.getElementById("demo").innerHTML = "login failed" + usernameInput;
+            alert("Login failed!\nCheck your username and password");
+            close_window();
         } else {
             user = usernameInput;
             score = scoreReceived;
-            document.getElementById("demo").innerHTML = "You are login as " + usernameInput + 'score: ' + score;
+//            document.getElementById("demo").innerHTML = "You are login as " + usernameInput + 'score: ' + score;
+            alert("You are login as "+usernameInput+"\n"+"score: "+score);
+            close_window();
         }
     });
 });
