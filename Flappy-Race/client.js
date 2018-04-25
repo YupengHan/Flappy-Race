@@ -241,7 +241,7 @@ document.addEventListener('keypress', (event) => {
         myGamePiece.move(0, 0.5);
     }
     if (keyName == 'w') {
-        myGamePiece.move(0, -1);
+        myGamePiece.move(0, -5);
     }
     if (keyName == 'a') {
         myGamePiece.move(-0.5, 0);
