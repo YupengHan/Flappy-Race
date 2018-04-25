@@ -15,17 +15,6 @@ var con = db.createPool({
     database: 'hr'
 });
 
-
-dbHas('NAN:123', function(has){
-    console.log('has is: ' + has);
-});
-
-dbGet('sam:asd', function(score){
-    console.log('score is: ' + score);
-});
-
-
-
 function dbInsert(nameAndPass){
     var newUser = {
         id: nameAndPass,
