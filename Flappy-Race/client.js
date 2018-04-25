@@ -14,7 +14,7 @@ function startGame() {
     myGamePiece.gravity = 0.5; // change gravity
     otherGamePiece.gravity = 0.5;
     background = new Image();
-    background.src = "./assets/img/bgd/bgds.jpg";
+    background.src = "./assets/img/bgd/bgds.png";
     background.onload = function() {
         ctx.drawImage(background, 0, 0);
     }
@@ -257,6 +257,7 @@ function test() {
 
 document.getElementById('match').addEventListener('click', function () {
     document.getElementById('match').style.display = 'none';
+    document.getElementById('wrap').style.display = 'none';
     sock.emit('match');
     sock.on('matchStart', function () {
         startGame();
