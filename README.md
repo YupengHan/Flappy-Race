@@ -10,6 +10,7 @@ Before start:
     npm install --save express socket.io
     
   install mysql, Use Legacy Authentication Method(retain MySQL 5.x Compatibility)
+  
   MySQL version 8.0.11
   
   open MySQL command line client, run
