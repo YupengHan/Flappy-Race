@@ -5,6 +5,7 @@ var projectiles = [];
 var user;
 var userAndpass;
 var score = 0;
+var background;
 
 function startGame() {
     updateScore();
@@ -12,6 +13,11 @@ function startGame() {
     otherGamePiece = new component(80, 80, "./assets/img/other/shime1.png", 10, 120, "image");
     myGamePiece.gravity = 0.5; // change gravity
     otherGamePiece.gravity = 0.5;
+    background = new Image();
+    background.src = "./assets/img/bgd/bgd.jpg";
+    background.onload = function() {
+        ctx.drawImage(background, 0, 0);
+    }
     myGameArea.start();
 }
 
@@ -70,6 +76,16 @@ function component(width, height, color, x, y, type) {
     }
     this.posRecive = function () {
         sock.on('pos', (x, y) => {
+            if (this.x - x > 0 && this.y - y == 0) {
+                otherGamePiece.image.src = "./assets/img/other/shime10.png";
+            }
+            else if (this.x - x < 0 && this.y - y == 0) {
+                otherGamePiece.image.src = "./assets/img/other/shime9.png";
+            }
+            else if (this.x - x == 0 && this.y - y != 0) {
+                // other player is going upward and downward
+                otherGamePiece.image.src = "./assets/img/other/shime4.png";
+            }
             this.x = x;
             this.y = y;
         });
