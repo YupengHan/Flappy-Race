@@ -35,9 +35,9 @@ function dbInsert(nameAndPass){
         connection.query('insert into hr set ?', newUser, function(err, result) {
             if(err) {
                 console.error(err);
-                return;
             }
             console.log(result);
+            connection.release();
         })
     });
 }
@@ -63,10 +63,10 @@ function dbGet(nameAndPass, callback){
         connection.query('select score from hr where id = \'' + nameAndPass + '\'', function(err, result) {
             if(err) {
                 console.error(err);
-                return;
             }
             callback(result[0].score);
             console.log(result[0].score);
+            connection.release();
         })
     });
 }
@@ -76,8 +76,8 @@ function dbSet(nameAndPass, score){
         var query = connection.query('UPDATE hr SET score = ' + score + ' WHERE id = \'' + nameAndPass + '\'', function(err, result) {
             if(err) {
                 console.error(err);
-                return;
             }
+            connection.release();
         })
     });
 }
