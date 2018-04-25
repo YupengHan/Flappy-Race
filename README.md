@@ -2,7 +2,9 @@
 Before start:
 
   install node js and npm.
+  
   node version v8.9.4
+  
   npm version v5.6.0
   
   run
