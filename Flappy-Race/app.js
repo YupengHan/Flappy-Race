@@ -1,33 +1,93 @@
 'use strict';
 
-// -----------------------------------------------------------------------------------------
-var mysql = require('mysql');
-
-var con = mysql.createConnection({
-        host: "localhost",
-        user: "root",
-        password: "Lab6",
-        database: "hafdb"
-        // port: 8080
-});
-
-
-// -----------------------------------------------------------------------------------------
-
 let http = require('http');
 let express = require('express');
 let socketio = require('socket.io');
+var db = require('mysql');
 
 let app = express();
 let server = http.createServer(app);
 let io = socketio(server);
+var con = db.createPool({
+    host: 'localhost',
+    user: 'root',
+    password: '',
+    database: 'hr'
+});
+
+
+dbHas('NAN:123', function(has){
+    console.log('has is: ' + has);
+});
+
+dbGet('sam:asd', function(score){
+    console.log('score is: ' + score);
+});
+
+
+
+function dbInsert(nameAndPass){
+    var newUser = {
+        id: nameAndPass,
+        score: 0
+    };
+    con.getConnection(function(error, connection){
+        connection.query('insert into hr set ?', newUser, function(err, result) {
+            if(err) {
+                console.error(err);
+                return;
+            }
+            console.log(result);
+        })
+    });
+}
+
+function dbHas(nameAndPass, callback){
+    con.getConnection(function(error, connection){
+        connection.query('select score from hr where id = \'' + nameAndPass + '\'', function(err, result) {
+            console.log('result: ' + result);
+            if(result[0]){
+                callback(true);
+                console.log('ITHAS: ');
+            }else{
+                callback(false);
+            }
+            connection.release();
+            if(err) throw error;
+        })
+    });
+}
+
+function dbGet(nameAndPass, callback){
+    con.getConnection(function(error, connection){
+        connection.query('select score from hr where id = \'' + nameAndPass + '\'', function(err, result) {
+            if(err) {
+                console.error(err);
+                return;
+            }
+            callback(result[0].score);
+            console.log(result[0].score);
+        })
+    });
+}
+
+function dbSet(nameAndPass, score){
+    con.getConnection(function(error, connection){
+        var query = connection.query('UPDATE hr SET score = ' + score + ' WHERE id = \'' + nameAndPass + '\'', function(err, result) {
+            if(err) {
+                console.error(err);
+                return;
+            }
+        })
+    });
+}
 
 var matching = false;
 
 var roomNo = 2;
 
 var users = new Map();
-users.set("sam/123", 0);
+users.set("sam:123", 0);
 
 io.on('connection', onConnection);
 
@@ -58,194 +118,36 @@ function onConnection(sock) {
         io.in(Object.keys(sock.rooms)[0]).emit('firec', x, y, direction);
     });
     sock.on('login', function (nameAndPass) {
-
-
-
-        console.log(nameAndPass);
-
-        var midexist;
-        var wincount;
-        con.connect(function(err) {
-        	if (err) throw err;
-        	console.log("Connected!");
-        	var sql = "SELECT EXISTS(SELECT 1 FROM users WHERE nameandpass='"+nameAndPass+"');";
-        	console.log(sql);        		
-        	con.query(sql, function (err, result) {
-        		var result_str=JSON.stringify(result);
-                // console.log(result_str);
-                // console.log("result_str.indexOf(})"+result_str.indexOf("}"));
-                var result_index_num=result_str.indexOf("}")-1;
-                // console.log('result_index_num'+result_index_num);
-                midexist=result_str[result_index_num];
-                console.log(midexist);
-                // console.log("Exisits");
-
-        		if (err) throw err;
-        		// console.log(result);
-        		// console.log("Object.keys(result)[1]:"+Object.keys(result)[1]);
-        		// console.log("Object.keys(result): "+Object.keys(result));
-        		// console.log("Object.getOwnPropertyNames(result)[0]: "+Object.getOwnPropertyNames(result[0])   );	
-        		// console.log('------------------------------------------------------')
-        		// console.log('result[0]'+result[0][0]);
-        		// console.log('result[1]'+result[0][1]);
-        		// var prop_name=Object.getOwnPropertyNames(result)[0];
-        		// console.log(prop_name);
-        		// console.log(result.prop_name);
-        		// console.log('prop_name:'+prop_name);
-        		// const desp1 = Object.getOwnPropertyDescriptor(result,prop_name);
-        		// midexis=desp1.value;
-                if (midexist==1) 
-                {
-                    console.log("Exisits");
-                    var sql = "SELECT wincount from users where nameandpass ='"+nameAndPass+"';";
-                    console.log(sql);
-                    con.query(sql, function (err, result) {
-                        if (err) throw err;
-                        var result_str=JSON.stringify(result);
-                        // console.log(result);
-                        console.log(result_str);
-                        var result_index_end=result_str.indexOf("}");
-                        console.log('result_index_end'+result_index_end);
-                        var result_index_begin=result_str.indexOf(":")+1;
-                        console.log('result_index_begin'+result_index_begin);
-                        wincount=result_str.substring(result_index_begin,result_index_end);
-                        console.log('wincount:'+wincount);
-                        // console.log(result['wincount']);
-                        sock.emit('login',nameAndPass,wincount);
-
-                    })
-
-                    
-                }
-                else{
-                    sock.emit('login','guest');
-                }
-
-        		
-        		
-        	});
-            
-
+        console.log('prem: '+nameAndPass);
+        //console.log('dbgetreturn: '+dbGet(nameAndPass));
+        dbHas(nameAndPass, function(has){
+            if(has){
+                dbGet(nameAndPass, function(score){
+                    sock.emit('login', nameAndPass, score);
+                });
+            } else {
+                console.log('dont have' + nameAndPass);
+                sock.emit('login', 'guest');
+            }
         });
-
-        // if(midexist){
-        // 	console.log("midexist=true");
-        // 	var wincount;
-        // 	// Hard Code
-        // 	con.connect(function(err) {
-        // 	if (err) throw err;
-        // 	console.log("Connected!");
-        // 	var sql = "SELECT wincount from users where nameandpass ='"+nameAndPass+"';";
-        // 	console.log(sql);
-        // 	con.query(sql, function (err, result) {
-        // 		console.log('-----------------------------------------------------------------------')
-        // 		console.log(result);
-        // 		console.log(rows[0]['wincount']);
-        // 		console.log('-----------------------------------------------------------------------')
-        // 		if (err) throw err;
-        // 		console.log("Wincount is :"+result);
-        // 		midexist=true;
-        // 	});
-        // 	});
-
-
-        // 	// wincount=0;
-        //     sock.emit('login', nameAndPass, wincount);
-        // } else {
-        //     console.log('Guseting')
-        //     sock.emit('login', 'guest');
-        // }
     });
     sock.on('score', function (nameAndPass, score) {
-
-        // console.log(nameAndPass + score);
-        // if(users.has(nameAndPass)){
-        //     users.set(nameAndPass, score);
-        // }
-        con.connect(function(err) {
-            if (err) throw err;
-            console.log("Connected for score!");
-            var sql = "SELECT EXISTS(SELECT 1 FROM users WHERE nameandpass='"+nameAndPass+"');";
-            console.log(sql);               
-            con.query(sql, function (err, result) {
-                var result_str=JSON.stringify(result);
-                // console.log(result_str);
-                // console.log("result_str.indexOf(})"+result_str.indexOf("}"));
-                var result_index_num=result_str.indexOf("}")-1;
-                // console.log('result_index_num'+result_index_num);
-                midexist=result_str[result_index_num];
-                console.log(midexist);
-                // console.log("Exisits");
-
-                if (err) throw err;
-                // console.log(result);
-                // console.log("Object.keys(result)[1]:"+Object.keys(result)[1]);
-                // console.log("Object.keys(result): "+Object.keys(result));
-                // console.log("Object.getOwnPropertyNames(result)[0]: "+Object.getOwnPropertyNames(result[0])   ); 
-                // console.log('------------------------------------------------------')
-                // console.log('result[0]'+result[0][0]);
-                // console.log('result[1]'+result[0][1]);
-                // var prop_name=Object.getOwnPropertyNames(result)[0];
-                // console.log(prop_name);
-                // console.log(result.prop_name);
-                // console.log('prop_name:'+prop_name);
-                // const desp1 = Object.getOwnPropertyDescriptor(result,prop_name);
-                // midexis=desp1.value;
-                if (midexist==1) 
-                {
-                    console.log("Exisits");
-                    // var sql = "SELECT wincount from users where nameandpass ='"+nameAndPass+"';";
-                    var sql = "update users set wincount = 2 where nameandpass='"+nameAndPass+"';";
-                    console.log(sql);
-                    con.query(sql, function (err, result) {
-                        if (err) throw err;
-                        // var result_str=JSON.stringify(result);
-                        // // console.log(result);
-                        // console.log(result_str);
-                        // var result_index_end=result_str.indexOf("}");
-                        // console.log('result_index_end'+result_index_end);
-                        // var result_index_begin=result_str.indexOf(":")+1;
-                        // console.log('result_index_begin'+result_index_begin);
-                        // var wincount=result_str.substring(result_index_begin,result_index_end);
-                        // console.log('wincount:'+wincount);
-                        // console.log(result['wincount']);
-
-                    })
-
-                    sock.emit('login',nameAndPass,wincount);
-                }
-                else{
-                    sock.emit('login','guest');
-                }
-
-                
-                
-            });
-            
-
+        console.log(nameAndPass + score);
+        dbHas(nameAndPass, function(has){
+            if(has){
+                dbSet(nameAndPass, score);
+            }
         });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    });
+    sock.on('signUp', function (nameAndPass) {
+        console.log(nameAndPass);
+        dbHas(nameAndPass, function(has){
+            if(has){
+                sock.emit('signUp', 'user exist');
+            } else {
+                dbInsert(nameAndPass);
+                sock.emit('signUp', 'success');
+            }
+        })
     });
 }
