@@ -14,7 +14,7 @@ function startGame() {
     myGamePiece.gravity = 0.5; // change gravity
     otherGamePiece.gravity = 0.5;
     background = new Image();
-    background.src = "./assets/img/bgd/bgd.jpg";
+    background.src = "./assets/img/bgd/bgds.jpg";
     background.onload = function() {
         ctx.drawImage(background, 0, 0);
     }
@@ -76,15 +76,18 @@ function component(width, height, color, x, y, type) {
     }
     this.posRecive = function () {
         sock.on('pos', (x, y) => {
-            if (this.x - x > 0 && this.y - y == 0) {
+            if (this.x - x == 0 && this.y - y > 0) {
+                // other player is going upward and downward
+                otherGamePiece.image.src = "./assets/img/other/shime4.png";
+            }
+            else if (this.x - x == 0 && this.y - y < 0){
+                otherGamePiece.image.src = "./assets/img/other/shime4.png";
+            }
+            else if (this.x - x > 0 && this.y - y == 0) {
                 otherGamePiece.image.src = "./assets/img/other/shime10.png";
             }
             else if (this.x - x < 0 && this.y - y == 0) {
                 otherGamePiece.image.src = "./assets/img/other/shime9.png";
-            }
-            else if (this.x - x == 0 && this.y - y != 0) {
-                // other player is going upward and downward
-                otherGamePiece.image.src = "./assets/img/other/shime4.png";
             }
             this.x = x;
             this.y = y;
@@ -152,7 +155,6 @@ function component(width, height, color, x, y, type) {
         }
     }
     this.attack1 = function () {
-        myGamePiece.image.src = "./assets/img/my/shime1.png";
         var direction = myGamePiece.x - otherGamePiece.x;
         if (direction < 0) {
             direction = 1;
@@ -161,7 +163,7 @@ function component(width, height, color, x, y, type) {
         }
         sock.emit('fire', this.x, this.y, direction);
         sock.on('firec', (x, y, direction) => {
-            var projectile = new component(10, 10, "green", x+direction*(this.width+1), y);
+            var projectile = new component(30, 30, "./assets/Fire.png", x+direction*(this.width+1), y, "image");
             projectile.speedX = direction;
             projectiles.push(projectile);
         });
@@ -172,7 +174,7 @@ function updateGameArea() {
     checkCrash();
     myGameArea.clear();
     myGameArea.frameNo += 1;
-    if (everyinterval(50)) {
+    if (everyinterval(70)) {
         myGamePiece.attack1();
     }
 
